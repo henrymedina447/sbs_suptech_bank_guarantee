@@ -1,5 +1,4 @@
 from typing import Any
-
 from application.contracts.parameter_contract import ParameterContract
 from application.exceptions.collect_data_exception import CollectDataException
 from application.ports.loader_document_port import LoaderDocumentPort
