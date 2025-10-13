@@ -9,9 +9,12 @@ class RegulatoryReportEntity(BaseModel):
     ccr: str = Field(description="Código de crédito sobre el cual se itera")
     ccl: str = Field(description="Código del cliente")
     csbs: str = Field(description="Código del cliente que asigna la sbs")
-    ncl: str = Field(description="Desconocido")
+    ncl: str | None = Field(description="Desconocido", default=None)
     kco: float = Field(description="Monto del mes actual")
     ccco: str = Field(description="Desconocido")
-    kco_mes_anterior: float = Field(description="Monto del mes anterior")
-    convenio_fmv: float = Field(description="Indica si el ccr tiene un convenio con el fondo mi vivienda")
-
+    ccco_mes_anterior: str | None = Field(description="Desconocido", default=None)
+    kco_mes_anterior: float | None = Field(description="Monto del mes anterior", default=0)
+    convenio_fmv: str | None = Field(
+        description="Indica si el ccr tiene un convenio con el fondo mi vivienda (Sí)",
+        default=None
+    )

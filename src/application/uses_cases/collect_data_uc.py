@@ -10,6 +10,7 @@ from application.exceptions.collect_data_exception import CollectDataException
 from application.ports.loader_document_port import LoaderDocumentPort
 from application.states.collect_data.collect_data_state import CollectDataState
 from domain.models.entities.internal_tables_entity import InternalTablesEntity
+from domain.models.entities.regulatory_report_entity import RegulatoryReportEntity
 
 
 class CollectDataUseCase:
@@ -29,13 +30,25 @@ class CollectDataUseCase:
         except CollectDataException as e:
             self.logger.error(f"""
                           Se ha producido un error al cargar las tablas internas 
-                          de tipo: {e.reason} y mensaje: {e.message}""")
+                          de tipo: {e.reason} y mensaje: {e.message}""", exc_info=True)
             return {
                 "internal_tables_collection": []
             }
 
     def _load_regulatory_reports(self, state: CollectDataState) -> dict[str, Any]:
-        return {}
+        try:
+            results: list[RegulatoryReportEntity] = self._loader_document.load_regulatory_report(self._wf_parameters)
+            return {
+                "regulatory_reports_collection": results
+            }
+
+        except CollectDataException as e:
+            self.logger.error(f"""
+                          Se ha producido un error al cargar las tablas de reporte regulatorio 
+                          de tipo: {e.reason} y mensaje: {e.message}""", exc_info=True)
+            return {
+                "regulatory_reports_collection": []
+            }
 
     def _load_bank_guarantees_metadata(self, state: CollectDataState) -> dict[str, Any]:
         return {}

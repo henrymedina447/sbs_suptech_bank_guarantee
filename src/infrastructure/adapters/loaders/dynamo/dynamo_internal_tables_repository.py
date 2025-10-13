@@ -58,7 +58,6 @@ class DynamoInternalTablesRepository(InternalTablesRepository):
                 message=f"Existen datos mal formados {str(e)} en {method_name}"
             ) from e
         except (EndpointConnectionError, ClientError, ConnectTimeoutError, ReadTimeoutError, BotoCoreError) as e:
-            print("e",e)
             raise CollectDataException(
                 reason=CollectDataErrorsEnum.t_internal_table,
                 message=f"Existe un error crítico al obtener los datos de la tabla en {method_name}"

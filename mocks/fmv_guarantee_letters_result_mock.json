@@ -1,0 +1,56 @@
+[
+  {
+    "ccr": "107147101000649753",
+    "letter_text": "CF-7102060000-001",
+    "reduced_amount": "S/ 12,800",
+    "coincidence": true
+  },
+  {
+    "ccr": "107147101000858331",
+    "letter_text": "CF-7102060000-002",
+    "reduced_amount": "S/ 7,600",
+    "coincidence": true
+  },
+  {
+    "ccr": "107147101000851803",
+    "letter_text": "CF-7102060000-003",
+    "reduced_amount": "S/ 0",
+    "coincidence": false
+  },
+  {
+    "ccr": "1072150101001461297",
+    "letter_text": "CF-7102060000-004",
+    "reduced_amount": "S/ 95,300",
+    "coincidence": false
+  },
+  {
+    "ccr": "107020101017693540",
+    "letter_text": "CF-7102060000-005",
+    "reduced_amount": "S/ 210,000",
+    "coincidence": true
+  },
+  {
+    "ccr": "107147101000883713",
+    "letter_text": "CF-7102060000-006",
+    "reduced_amount": "S/ 35,900",
+    "coincidence": false
+  },
+  {
+    "ccr": "107147101000648625",
+    "letter_text": "CF-7102060000-007",
+    "reduced_amount": "S/ 0",
+    "coincidence": true
+  },
+  {
+    "ccr": "107147101000844781",
+    "letter_text": "CF-7102060000-008",
+    "reduced_amount": "S/ 22,400",
+    "coincidence": true
+  },
+  {
+    "ccr": "1071341010000916831",
+    "letter_text": "CF-7102060000-009",
+    "reduced_amount": "S/ 18,500",
+    "coincidence": false
+  }
+]
