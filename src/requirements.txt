@@ -1,0 +1,13 @@
+botocore
+langgraph
+pydantic
+langchain
+langchain-openai
+langchain-community
+boto3
+langchain-aws
+fastapi
+uvicorn
+python-dotenv
+aiokafka
+mypy-boto3-dynamodb

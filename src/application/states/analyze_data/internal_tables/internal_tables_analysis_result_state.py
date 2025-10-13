@@ -1,0 +1,5 @@
+from application.states.analyze_data.regulatory_reports.regulatory_report_analysis_result_state import RegulatoryReportAnalysisResultState
+
+
+class InternalTablesAnalysisResultState(RegulatoryReportAnalysisResultState):
+    pass
