@@ -9,6 +9,7 @@ from application.contracts.parameter_contract import ParameterContract
 from application.exceptions.collect_data_exception import CollectDataException
 from application.ports.loader_document_port import LoaderDocumentPort
 from application.states.collect_data.collect_data_state import CollectDataState
+from domain.models.entities.bank_guarantee_metadata_entity import BankGuaranteeEntity
 from domain.models.entities.internal_tables_entity import InternalTablesEntity
 from domain.models.entities.regulatory_report_entity import RegulatoryReportEntity
 
@@ -51,7 +52,19 @@ class CollectDataUseCase:
             }
 
     def _load_bank_guarantees_metadata(self, state: CollectDataState) -> dict[str, Any]:
-        return {}
+        try:
+            results: list[BankGuaranteeEntity] = self._loader_document.load_bank_guarantee_metadata(self._wf_parameters)
+            return {
+                "bank_guarantee_metadata_collection": results
+            }
+
+        except CollectDataException as e:
+            self.logger.error(f"""
+                                 Se ha producido un error al cargar las tablas de metadata 
+                                 de tipo: {e.reason} y mensaje: {e.message}""", exc_info=True)
+            return {
+                "bank_guarantee_metadata_collection": []
+            }
 
     def _build_graph(self) -> CompiledStateGraph[CollectDataState]:
         g = StateGraph(CollectDataState)

@@ -62,7 +62,13 @@ class DynamoLoaderDocumentAdapter(LoaderDocumentPort):
 
     def load_bank_guarantee_metadata(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
         try:
-            return []
+            results: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_period(
+                user_id=parameters.legal_name,
+                year=str(parameters.period_year),
+                month=str(parameters.period_month)
+            )
+            metadata_tables = [BankGuaranteeEntity(**r) for r in results]
+            return metadata_tables
         except ValidationError as e:
             method_name = inspect.currentframe().f_code.co_name
             raise CollectDataException(
