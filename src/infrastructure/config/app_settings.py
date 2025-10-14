@@ -28,8 +28,7 @@ class S3Settings(BaseModel):
 class TableSettings(BaseModel):
     it_table: str = Field(description="Es el nombre de la tabla interna del supervisado")
     rr_table: str = Field(description="Es el nombre de la tabla de reportes regulatorios")
-    warranty_experts_table: str = Field(description="Es el nombre de la tabla de warranty_experts")
-    pwa_table: str = Field(description="Es el nombre de la tabla preferred-warranty-analysis")
+    ar_table: str = Field(description="Es el nombre de la tabla resultados de análisis")
     si_table: str = Field(description="Es el nombre de la tabla supervisory records que contiene todos los metadatos")
 
 
@@ -75,8 +74,7 @@ class AppSettings(BaseModel):
                 table_settings=TableSettings(
                     it_table=os.getenv("IT_TABLE"),
                     rr_table=os.getenv("RR_TABLE"),
-                    warranty_experts_table=os.getenv("WARRANTY_EXPERTS_TABLE"),
-                    pwa_table=os.getenv("PREFERRED_WARRANTY_ANALYSIS_TABLE"),
+                    ar_table=os.getenv("ANALYSIS_RESULT_TABLE"),
                     si_table=os.getenv("SUPERVISED_ITEMS_TABLE")
                 ),
                 kafka_settings=KafkaSettings(

@@ -7,3 +7,5 @@ class OrchestratorInputContract(BaseModel):
     type_event: str = Field(description="El tipo de evento que está atendiendo la aplicación")
     analysis_execution_id: str = Field(description="Contiene el id de la ejecución")
     session_id: str = Field(description="Contiene el id de la session")
+    id: int = Field(description="Contiene el id del evento")
+    supervised_entity_id: UUID = Field(description="Contiene el id de la empresa supervisada")

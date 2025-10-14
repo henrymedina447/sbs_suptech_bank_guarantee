@@ -1,28 +1,35 @@
 import inspect
 from typing import Any
+from uuid import UUID
 
 from pydantic_core import ValidationError
 
 from application.contracts.parameter_contract import ParameterContract
 from application.exceptions.collect_data_exception import CollectDataException
 from application.ports.loader_document_port import LoaderDocumentPort
+from application.states.analyze_data.analyse_data_state import AnalyzeDataState
 from domain.enums.collect_data_errors_enum import CollectDataErrorsEnum
+from domain.models.entities.analysis_result_report_entity import AnalysisResultReportEntity
 from domain.models.entities.bank_guarantee_metadata_entity import BankGuaranteeEntity
 from domain.models.entities.internal_tables_entity import InternalTablesEntity
 from domain.models.entities.regulatory_report_entity import RegulatoryReportEntity
+from domain.repositories.analysis_result_report_repository import AnalysisResultReportRepository
+from domain.repositories.analysis_result_report_status_repository import AnalysisResultReportStatusRepository
 from domain.repositories.bank_guarantee_metadata_repository import BankGuaranteeMetadataRepository
 from domain.repositories.internal_tables_repository import InternalTablesRepository
 from domain.repositories.regulatory_report_repository import RegulatoryReportRepository
 
 
-class DynamoLoaderDocumentAdapter(LoaderDocumentPort):
+class LoaderDocumentAdapter(LoaderDocumentPort):
 
     def __init__(self,
                  bk_g_m_r: BankGuaranteeMetadataRepository,
                  it_r: InternalTablesRepository,
-                 rr_r: RegulatoryReportRepository
+                 rr_r: RegulatoryReportRepository,
+                 ar_r: AnalysisResultReportRepository,
+                 ar_s: AnalysisResultReportStatusRepository
                  ):
-        super().__init__(bk_g_m_r, it_r, rr_r)
+        super().__init__(bk_g_m_r, it_r, rr_r, ar_r, ar_s)
 
     def load_regulatory_report(self, parameters: ParameterContract) -> list[RegulatoryReportEntity]:
         try:
@@ -78,5 +85,14 @@ class DynamoLoaderDocumentAdapter(LoaderDocumentPort):
         except CollectDataException as e:
             raise
 
-    def save_analysis(self, analysis_result: dict[str, Any]) -> None:
-        pass
+    def save_analysis(self, source: UUID, analysis_result: AnalyzeDataState) -> tuple[bool, str | None]:
+        try:
+            key: str = self._ar_r.save_report(source, analysis_result)
+            return True, key
+        except Exception as e:
+            print(f"error: {e}")
+            return False, None
+
+    def save_status(self, status: AnalysisResultReportEntity) -> None:
+        self._ar_s.save_status(status)
+

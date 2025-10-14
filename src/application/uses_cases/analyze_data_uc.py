@@ -30,6 +30,11 @@ class AnalyzeDataUseCase:
         self.it_wf: AnalyzeInternalTablesWorkflow = AnalyzeInternalTablesWorkflow()
 
     def _start_task(self, state: AnalyzeDataState) -> dict[str, Any]:
+        """
+        Nodo encargado de la preparación de la data antes de ser procesada por el flujo
+        :param state:
+        :return:
+        """
         try:
             self.bank_guarantee_metadata_normalized = AnalyzeDataApplicationService.normalize_bank_guarantee_metadata(
                 self.collections.bank_guarantee_metadata_collection
@@ -42,6 +47,11 @@ class AnalyzeDataUseCase:
             return {}
 
     def _analyze_regulatory_reports(self, state: AnalyzeDataState) -> dict[str, Any]:
+        """
+        Resuelve todos los procesos de las reglas de los reportes regulatorios
+        :param state:
+        :return:
+        """
         try:
             results_1: list[FMVGuaranteeLettersResultEntity] = []
             results_2: list[RegulatoryReportAnalysisResultEntity] = []
@@ -65,6 +75,11 @@ class AnalyzeDataUseCase:
             return {}
 
     def _analyze_internal_tables(self, state: AnalyzeDataState) -> dict[str, Any]:
+        """
+        Resuelve todos los procesos de las internal tables
+        :param state:
+        :return:
+        """
         try:
             results_1: list[InternalTablesAnalysisResultEntity] = []
             for it in self.collections.internal_tables_collection:
@@ -74,7 +89,7 @@ class AnalyzeDataUseCase:
                 )
                 results_1.append(result.internal_tables_analysis_result)
             return {
-                "regulatory_report_analysis_results": results_1,
+                "internal_tables_analysis_results": results_1,
             }
         except AnalyzeDataException as e:
             self.logger.error(f"""

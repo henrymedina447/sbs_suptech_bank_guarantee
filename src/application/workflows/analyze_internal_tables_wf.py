@@ -19,6 +19,13 @@ class AnalyzeInternalTablesWorkflow:
         self.logger = logging.getLogger("app.workflows")
 
     def _analyze_reduced_amount(self, state: InternalTablesState) -> dict[str, Any]:
+        """
+        Evalúa la regla:La suma de todos los montos reducidos de las cartas que están asociadas a un código de
+        crédito en un mismo período debe ser igual al monto reducido calculado que existe en la misma fila
+        del código de garantía que se revisa.
+        :param state:
+        :return:
+        """
         try:
             origin_doc = state.origin_doc
             item: InternalTablesAnalysisResultEntity = InternalTablesAnalysisResultEntityService.get_analyzed_reduced_amount_item(

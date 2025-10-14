@@ -78,6 +78,8 @@ class KafkaEventController:
                     type_event=dto.type_event,
                     source=dto.source,
                     session_id=dto.data.session_id,
+                    id=dto.id,
+                    supervised_entity_id=dto.supervised_entity_id,
                 )
                 wf_parameters: ParameterContract = ParameterContract(
                     period_year=dto.data.period_year,

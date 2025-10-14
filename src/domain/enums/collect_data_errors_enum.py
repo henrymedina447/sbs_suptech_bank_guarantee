@@ -8,4 +8,4 @@ class CollectDataErrorsEnum(StrEnum):
     u_regulatory_report = "Error al ejecutar una transformación en la tabla de reporte regulatorios"
     t_bank_guarantee_metadata_table = "Error al ejecutar una operación en la tabla de obtención de metadata"
     u_bank_guarantee_metadata_table = "Error al ejecutar una transformación en la tabla de obtención de metadata"
-
+    t_analysis_result = "Error al ejecutar una operación en la tabla de comunicación de eventos de análisis de resultados"

@@ -22,6 +22,13 @@ class AnalyzeRegulatoryReportWorkflow:
         self.logger = logging.getLogger("app.workflows")
 
     def _analyze_reduced_amount(self, state: RegulatoryReportState) -> dict[str, Any]:
+        """
+               Evalúa la regla:La suma de todos los montos reducidos de las cartas que están asociadas a un código de
+               crédito en un mismo período debe ser igual al monto reducido calculado que existe en la misma fila
+               del código de garantía que se revisa.
+               :param state:
+               :return:
+        """
         try:
             origin_doc = state.origin_doc
             item: RegulatoryReportAnalysisResultEntity = RegulatoryReportAnalysisResultEntityService.get_analyzed_reduced_amount_item(
@@ -39,6 +46,14 @@ class AnalyzeRegulatoryReportWorkflow:
             return {}
 
     def _analyze_fmv_guarantee_letters(self, state: RegulatoryReportState) -> dict[str, Any]:
+        """
+        Evalúa la regla compuesta: - (1) Dado un código de crédito; obtener el nombre del cliente en la tabla de
+        reportes regulatorios; - (2) Dado un código de crédito; obtener todas las cartas que compartan el mismo
+        número de crédito en los metadatos - Hecho el punto 1 y 2 se revisa la regla: Todas las cartas asociadas a un
+        código de crédito deben tener el mismo nombre de cliente dentro de la metadata
+        :param state:
+        :return:
+        """
         try:
             origin_doc = state.origin_doc
             item: list[
