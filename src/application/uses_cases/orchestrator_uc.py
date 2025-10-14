@@ -7,6 +7,7 @@ from langgraph.graph.state import CompiledStateGraph, StateGraph
 from application.contracts.orchestrator_input_contract import OrchestratorInputContract
 from application.contracts.parameter_contract import ParameterContract
 from application.ports.loader_document_port import LoaderDocumentPort
+from application.states.collect_data.collect_data_state import CollectDataState
 from application.states.orchestrator_state import OrchestratorState
 from application.uses_cases.analyze_data_uc import AnalyzeDataUseCase
 from application.uses_cases.collect_data_uc import CollectDataUseCase
@@ -23,7 +24,7 @@ class OrchestratorWorkflow:
         self._loader_document = loader_document
         self._logger = logging.getLogger("app.workflows")
         self._graph = self._build_graph()
-        self.wf_parameters: ParameterContract | None=None
+        self.wf_parameters: ParameterContract | None = None
 
     def _start_task(self, state: OrchestratorState) -> dict[str, Any]:
         self._logger.info("start task running")
@@ -31,11 +32,15 @@ class OrchestratorWorkflow:
 
     async def _collect_data(self, state: OrchestratorState) -> dict[str, Any]:
         self._logger.info("collect data running")
-        await self._collect_data_uc.execute(self.wf_parameters)
-        return {}
+        results: CollectDataState = await self._collect_data_uc.execute(self.wf_parameters)
+        return {
+            "collect_data": results,
+        }
 
-    def _analyze_data(self, state: OrchestratorState) -> dict[str, Any]:
+    async def _analyze_data(self, state: OrchestratorState) -> dict[str, Any]:
         self._logger.info("analyze data running")
+        collections: CollectDataState = state.collect_data
+        await self._analyze_data_uc.execute(self.wf_parameters, collections)
         return {}
 
     def _final_task(self, state: OrchestratorState) -> dict[str, Any]:

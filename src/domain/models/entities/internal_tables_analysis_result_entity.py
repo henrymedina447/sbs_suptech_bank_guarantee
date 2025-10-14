@@ -1,5 +1,5 @@
-from domain.models.entities.regulatory_report_analysis_result_state import RegulatoryReportAnalysisResultState
+from domain.models.entities.regulatory_report_analysis_result_entity import RegulatoryReportAnalysisResultEntity
 
 
-class InternalTablesAnalysisResultState(RegulatoryReportAnalysisResultState):
+class InternalTablesAnalysisResultEntity(RegulatoryReportAnalysisResultEntity):
     pass

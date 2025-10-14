@@ -11,3 +11,4 @@ uvicorn
 python-dotenv
 aiokafka
 mypy-boto3-dynamodb
+rapidfuzz

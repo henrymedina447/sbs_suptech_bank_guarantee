@@ -8,6 +8,7 @@ class MetadataEntity(BaseModel):
     total_amount: float | None = Field(description="Contiene el monto total", default=None)
     letter_text: str | None = Field(description="Contiene el número de la carta", default=None)
     project_text: str | None = Field(description="Contiene el nombre del proyecto", default=None)
+    promotor: str | None = Field(description="Contiene el nombre del promotor / cliente", default=None)
 
 
 class BankGuaranteeEntity(BaseModel):
