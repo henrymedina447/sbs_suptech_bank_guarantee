@@ -1,0 +1,5 @@
+from domain.models.entities.regulatory_report_analysis_result_state import RegulatoryReportAnalysisResultState
+
+
+class InternalTablesAnalysisResultState(RegulatoryReportAnalysisResultState):
+    pass
