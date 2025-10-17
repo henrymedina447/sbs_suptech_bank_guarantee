@@ -16,5 +16,5 @@ class MetadataByIdEntity(BaseModel):
 
 class BankGuaranteeMetadataByIdEntity(BaseModel):
     id: str = Field(description="Id del documento")
-    supervisory_record_id: str = Field(description="Id del documento desde el record")
+    supervisory_record_id: str = Field(description="Id del documento desde el record", alias="supervisoryRecordId")
     metadata: MetadataByIdEntity | None = Field(description="Metadatos del documento", default=None)

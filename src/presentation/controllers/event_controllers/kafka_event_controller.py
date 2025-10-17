@@ -74,7 +74,7 @@ class KafkaEventController:
                 data = json.loads(text) if text else {}
                 dto: AnalyzeRequestDto = AnalyzeRequestDto.model_validate(data)
                 wf_input: OrchestratorInputContract = OrchestratorInputContract(
-                    analysis_execution_id=dto.analysis_execution_id,
+                    analysis_execution_id=dto.data.analysis_execution_id,
                     type_event=dto.type_event,
                     source=dto.source,
                     session_id=dto.data.session_id,
@@ -87,8 +87,8 @@ class KafkaEventController:
                     legal_name=dto.data.supervised_entity.legal_name,
                     bank_guarantees=dto.data.bank_guarantees
                 )
-                return await asyncio.to_thread(self._wf.execute, wf_input, wf_parameters)
-
+                #return await asyncio.to_thread(self._wf.execute, wf_input, wf_parameters)
+                await self._wf.execute(wf_input, wf_parameters)
             except ValidationError as e:
                 app_logger.exception(f"Error de validación: {str(e)}")
             except Exception as e:

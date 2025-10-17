@@ -9,8 +9,14 @@ class SupervisedEntityDto(BaseModel):
 class DataInputDto(BaseModel):
     supervised_entity: SupervisedEntityDto = Field(description="Contiene toda la información de la entidad supervisada",
                                                    alias="supervisedEntity")
-    bank_guarantees: list[str] = Field(description="Contienen todos los id de los documentos de carta fianzas ")
-    analysis_execution_id: str = Field(description="Indica el id de análisis", alias="analysisExecutionId")
+    bank_guarantees: list[str] = Field(
+        description="Contienen todos los id de los documentos de carta fianzas",
+        alias="records"
+    )
+    analysis_execution_id: str | None = Field(
+        description="Indica el id de análisis",
+        alias="analysisExecutionId",
+        default=None)
     period_month: int = Field(description="Período de análisis", alias="periodMonth", ge=1, le=12)
     period_year: int = Field(description="Año de análisis", alias="periodYear", ge=1990, le=2050)
     session_id: str = Field(description="Indica la sesión en curso", alias="sessionId")

@@ -69,7 +69,9 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
             raise
 
     def load_bank_guarantee_metadata(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
-        return self._load_bank_guarantee_metadata_by_period(parameters)
+        #return self._load_bank_guarantee_metadata_by_period(parameters)
+        return self._load_bank_guarantee_metadata_by_ids(parameters)
+
 
     def save_analysis(self, source: UUID, analysis_result: AnalyzeDataState) -> tuple[bool, str | None]:
         try:
@@ -82,11 +84,13 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
     def save_status(self, status: AnalysisResultReportEntity) -> None:
         self._ar_s.save_status(status)
 
-    def _load_guarantee_metadata_by_ids(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
+    def _load_bank_guarantee_metadata_by_ids(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
+        response: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_ids(ids=parameters.bank_guarantees)
+        print(response)
         try:
             response: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_ids(ids=parameters.bank_guarantees)
             aux_list: list[BankGuaranteeMetadataByIdEntity] = [BankGuaranteeMetadataByIdEntity.model_validate(r) for r
-                                                               in response]
+                                                               in response if r.get("metadata",{}).get("period_year") is not None]
             return [self._normalize_to_bank_guarantee(r) for r in aux_list]
 
         except ValidationError as e:

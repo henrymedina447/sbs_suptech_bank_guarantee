@@ -92,8 +92,8 @@ class DynamoBankGuaranteeMetadataRepository(BankGuaranteeMetadataRepository):
         kwargs = dict(
             IndexName=INDEX_SUPERVISORY_RECORDS,
             KeyConditionExpression=Key("supervisoryRecordId").eq(sup_id),
-            ProjectionExpression="#id, #md",
-            ExpressionAttributeNames={"#id": "id", "#md": "metadata"},
+            ProjectionExpression="#id, #md, #sid",
+            ExpressionAttributeNames={"#id": "id", "#md": "metadata", "#sid": "supervisoryRecordId"},
             Limit=100,
         )
         while True:
