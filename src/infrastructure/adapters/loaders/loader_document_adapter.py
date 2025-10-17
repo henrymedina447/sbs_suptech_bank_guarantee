@@ -10,7 +10,8 @@ from application.ports.loader_document_port import LoaderDocumentPort
 from application.states.analyze_data.analyse_data_state import AnalyzeDataState
 from domain.enums.collect_data_errors_enum import CollectDataErrorsEnum
 from domain.models.entities.analysis_result_report_entity import AnalysisResultReportEntity
-from domain.models.entities.bank_guarantee_metadata_entity import BankGuaranteeEntity
+from domain.models.entities.bank_guarantee_metadata_by_id_entity import BankGuaranteeMetadataByIdEntity
+from domain.models.entities.bank_guarantee_metadata_entity import BankGuaranteeEntity, MetadataEntity
 from domain.models.entities.internal_tables_entity import InternalTablesEntity
 from domain.models.entities.regulatory_report_entity import RegulatoryReportEntity
 from domain.repositories.analysis_result_report_repository import AnalysisResultReportRepository
@@ -68,6 +69,36 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
             raise
 
     def load_bank_guarantee_metadata(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
+        return self._load_bank_guarantee_metadata_by_period(parameters)
+
+    def save_analysis(self, source: UUID, analysis_result: AnalyzeDataState) -> tuple[bool, str | None]:
+        try:
+            key: str = self._ar_r.save_report(source, analysis_result)
+            return True, key
+        except Exception as e:
+            print(f"error: {e}")
+            return False, None
+
+    def save_status(self, status: AnalysisResultReportEntity) -> None:
+        self._ar_s.save_status(status)
+
+    def _load_guarantee_metadata_by_ids(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
+        try:
+            response: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_ids(ids=parameters.bank_guarantees)
+            aux_list: list[BankGuaranteeMetadataByIdEntity] = [BankGuaranteeMetadataByIdEntity.model_validate(r) for r
+                                                               in response]
+            return [self._normalize_to_bank_guarantee(r) for r in aux_list]
+
+        except ValidationError as e:
+            method_name = inspect.currentframe().f_code.co_name
+            raise CollectDataException(
+                reason=CollectDataErrorsEnum.u_bank_guarantee_metadata_table,
+                message=f"Al intentar una transformación en {method_name} "
+            ) from e
+        except CollectDataException as e:
+            raise
+
+    def _load_bank_guarantee_metadata_by_period(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
         try:
             results: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_period(
                 user_id=parameters.legal_name,
@@ -85,14 +116,21 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
         except CollectDataException as e:
             raise
 
-    def save_analysis(self, source: UUID, analysis_result: AnalyzeDataState) -> tuple[bool, str | None]:
-        try:
-            key: str = self._ar_r.save_report(source, analysis_result)
-            return True, key
-        except Exception as e:
-            print(f"error: {e}")
-            return False, None
+    def _normalize_to_bank_guarantee(self, raw: BankGuaranteeMetadataByIdEntity) -> BankGuaranteeEntity:
+        return BankGuaranteeEntity(
+            file_name=raw.metadata.file_name,
+            period_month=raw.metadata.period_month,
+            period_year=raw.metadata.period_year,
+            supervisory_record_id=raw.supervisory_record_id,
+            type_document="carta fianza",
+            metadata=MetadataEntity(
+                letter_date=raw.metadata.letter_date,
+                disbursed_amount=raw.metadata.disbursed_amount,
+                reduced_amount=raw.metadata.reduced_amount,
+                total_amount=raw.metadata.total_amount,
+                letter_text=raw.metadata.letter_text,
+                project_text=raw.metadata.project_text,
+                promotor=raw.metadata.promotor
+            )
 
-    def save_status(self, status: AnalysisResultReportEntity) -> None:
-        self._ar_s.save_status(status)
-
+        )
