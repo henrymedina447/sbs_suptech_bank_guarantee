@@ -69,6 +69,7 @@ class KafkaEventController:
 
     async def _handle(self, value: bytes) -> None:
         async with self._sem:
+            app_logger.info("Iniciando proceso en kafka")
             try:
                 text = value.decode("utf-8", errors="ignore")
                 data = json.loads(text) if text else {}

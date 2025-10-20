@@ -19,7 +19,7 @@ class DynamoAnalysisResultStatusRepository(AnalysisResultReportStatusRepository)
         dynamo_resource = self._get_configuration()
 
         self.table: Table = dynamo_resource.Table(
-            self.app_settings.table_settings.si_table
+            self.app_settings.table_settings.ar_table
         )
 
     def _get_configuration(self) -> DynamoDBServiceResource:
@@ -35,7 +35,7 @@ class DynamoAnalysisResultStatusRepository(AnalysisResultReportStatusRepository)
     def save_status(self, result: AnalysisResultReportEntity) -> None:
         item = result.model_dump(mode="json", by_alias=True)
         item["source"] = str(item["source"])  # por si acaso
-        item["id"] = str(item["id"])
+        item["id"] = item["id"]
         method_name = inspect.currentframe().f_code.co_name
         try:
             self.table.put_item(Item=item)
