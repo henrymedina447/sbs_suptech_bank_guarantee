@@ -13,7 +13,10 @@ load_dotenv(dotenv_path, override=True)
 
 
 class AwsSettings(BaseModel):
+    access_key_id: str = Field(description="es el access key de la cuenta obtenido en el IAM")
+    secret: str = Field(description="es el secret key de la cuenta obtenido en el IAM")
     region: str = Field(description="La región de la aplicación")
+    bedrock_token: str = Field(description="Es el bearer token para bedrock")
 
 
 
@@ -64,7 +67,10 @@ class AppSettings(BaseModel):
             return cls(
                 mode="mock",
                 aws_settings=AwsSettings(
+                    access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                    secret=os.getenv("AWS_SECRET_ACCESS_KEY"),
                     region=os.getenv("AWS_DEFAULT_REGION"),
+                    bedrock_token=os.getenv("AWS_BEARER_TOKEN_BEDROCK")
                 ),
                 table_settings=TableSettings(
                     it_table=os.getenv("IT_TABLE"),
