@@ -12,6 +12,8 @@ class MetadataByIdEntity(BaseModel):
     promotor: str | None = Field(description="Contiene el nombre del promotor / cliente", default=None)
     period_month: str = Field(description="mes del periodo")
     period_year: str = Field(description="Año del periodo")
+    type_document: str = Field(description="Indica el tipo de documento", default="carta fianza")
+
 
 
 class BankGuaranteeMetadataByIdEntity(BaseModel):
