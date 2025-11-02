@@ -35,7 +35,7 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
     def load_regulatory_report(self, parameters: ParameterContract) -> list[RegulatoryReportEntity]:
         try:
             results: list[dict[str, Any]] = self._rr_r.get_collection(
-                user_id=parameters.legal_name,
+                user_id=str(parameters.supervised_entity_id),
                 year=str(parameters.period_year),
                 month=str(parameters.period_month),
             )
@@ -53,7 +53,7 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
     def load_internal_tables(self, parameters: ParameterContract) -> list[InternalTablesEntity]:
         try:
             results: list[dict[str, Any]] = self._it_r.get_collection(
-                user_id=parameters.legal_name,
+                user_id=str(parameters.supervised_entity_id),
                 year=str(parameters.period_year),
                 month=str(parameters.period_month),
             )

@@ -17,6 +17,7 @@ from infrastructure.config.app_settings import get_app_settings
 
 INDEX_BY_PERIOD = "period_year-period_month-index"
 INDEX_SUPERVISORY_RECORDS = "supervisoryRecordId-index"
+INDEX_BY_SUPERVISED_AND_PERIOD = "supervisedEntityId-period-index"
 
 
 class DynamoBankGuaranteeMetadataRepository(BankGuaranteeMetadataRepository):
@@ -37,6 +38,10 @@ class DynamoBankGuaranteeMetadataRepository(BankGuaranteeMetadataRepository):
         return boto3.resource(
             "dynamodb", config=_cfg, region_name=self.app_settings.aws_settings.region
         )
+
+    def get_collection_by_supervised_id_and_period(self, user_id: str, month: str, year: str) -> list[dict[str, Any]]:
+        return []
+
 
     def get_collection_by_period(self, user_id: str, month: str, year: str) -> list[dict[str, Any]]:
         method_name = inspect.currentframe().f_code.co_name

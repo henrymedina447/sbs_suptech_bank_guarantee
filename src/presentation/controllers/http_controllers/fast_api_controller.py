@@ -21,13 +21,14 @@ async def run_analysis(dto: AnalyzeRequestDto, wf: OrchestratorWorkflow = Depend
             source=dto.source,
             session_id=dto.data.session_id,
             id=dto.id,
-            supervised_entity_id=dto.supervised_entity_id,
+            supervised_entity_id=dto.data.supervised_entity.supervised_entity_id,
         )
         wf_parameters: ParameterContract = ParameterContract(
             period_year=dto.data.period_year,
             period_month=dto.data.period_month,
             legal_name=dto.data.supervised_entity.legal_name,
-            bank_guarantees=dto.data.bank_guarantees
+            bank_guarantees=dto.data.bank_guarantees,
+            supervised_entity_id=dto.data.supervised_entity.supervised_entity_id,
         )
         await wf.execute(wf_input, wf_parameters)
         return {"status": "success"}

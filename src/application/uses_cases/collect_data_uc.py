@@ -24,6 +24,7 @@ class CollectDataUseCase:
     def _load_internal_tables(self, state: CollectDataState) -> dict[str, Any]:
         try:
             results: list[InternalTablesEntity] = self._loader_document.load_internal_tables(self._wf_parameters)
+            print("internal tables", results)
             return {
                 "internal_tables_collection": results
             }

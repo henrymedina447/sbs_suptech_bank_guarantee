@@ -15,6 +15,8 @@ from domain.repositories.regulatory_report_repository import RegulatoryReportRep
 from infrastructure.config.app_settings import get_app_settings
 
 INDEX = "period_year-period_month-index"
+INDEX_BY_SUPERVISED_AND_PERIOD = "supervisedEntityId-period-index"
+
 
 
 class DynamoRegulatoryReportsRepository(RegulatoryReportRepository):
@@ -38,6 +40,37 @@ class DynamoRegulatoryReportsRepository(RegulatoryReportRepository):
         )
 
     def get_collection(self, user_id: str, month: str, year: str) -> list[dict[str, Any]]:
+        return self._get_collection_by_supervised_id_and_period(user_id, month, year)
+
+    def _get_collection_by_supervised_id_and_period(self, user_id: str, month: str, year: str) -> list[dict[str, Any]]:
+        method_name = inspect.currentframe().f_code.co_name
+        try:
+            items: list[dict[str, Any]] = []
+            formatted = f"{int(year)}-{int(month):02d}"
+            response: QueryOutputTableTypeDef = self.table.query(
+                IndexName=INDEX_BY_SUPERVISED_AND_PERIOD,
+                KeyConditionExpression=Key("supervisedEntityId").eq(user_id) & Key("period").eq(formatted)
+            )
+            items.extend(response.get("Items", []))
+            while "LastEvaluatedKey" in response:
+                response: QueryOutputTableTypeDef = self.table.query(
+                    IndexName=INDEX_BY_SUPERVISED_AND_PERIOD,
+                    KeyConditionExpression=Key("supervisedEntityId").eq(user_id) & Key("period").eq(formatted),
+                    ExclusiveStartKey=response["LastEvaluatedKey"]
+                )
+                items.extend(response.get("Items", []))
+            return items
+        except ParamValidationError as e:
+            raise CollectDataException(
+                reason=CollectDataErrorsEnum.t_internal_table,
+                message=f"Existen datos mal formados {str(e)} en {method_name}"
+            ) from e
+        except (EndpointConnectionError, ClientError, ConnectTimeoutError, ReadTimeoutError, BotoCoreError) as e:
+            raise CollectDataException(
+                reason=CollectDataErrorsEnum.t_internal_table,
+                message=f"Existe un error crítico al obtener los datos de la tabla en {method_name}"
+            ) from e
+    def _get_collection_by_period(self, month: str, year: str) -> list[dict[str, Any]]:
         method_name = inspect.currentframe().f_code.co_name
         try:
             items: list[dict[str, Any]] = []

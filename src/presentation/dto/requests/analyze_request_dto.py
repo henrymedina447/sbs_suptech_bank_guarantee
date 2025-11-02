@@ -4,6 +4,7 @@ from uuid import UUID
 
 class SupervisedEntityDto(BaseModel):
     legal_name: str = Field(description="Indica la razón social del investigado", alias="legalName")
+    supervised_entity_id: UUID = Field(description="Indica el id de la entidad supervisada", alias="supervisedEntityId")
 
 
 class DataInputDto(BaseModel):
