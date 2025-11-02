@@ -85,7 +85,7 @@ class LoaderDocumentAdapter(LoaderDocumentPort):
 
     def _load_bank_guarantee_metadata_by_ids(self, parameters: ParameterContract) -> list[BankGuaranteeEntity]:
         response: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_ids(ids=parameters.bank_guarantees)
-        print(response)
+        print("response",response)
         try:
             response: list[dict[str, Any]] = self._bk_g_m_r.get_collection_by_ids(ids=parameters.bank_guarantees)
             aux_list: list[BankGuaranteeMetadataByIdEntity] = [BankGuaranteeMetadataByIdEntity.model_validate(r) for r

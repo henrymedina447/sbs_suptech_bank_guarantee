@@ -1,6 +1,7 @@
-.env
+environments/.env_dev
 # Ignorar archivos compilados de Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+/environments/

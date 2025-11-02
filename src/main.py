@@ -3,6 +3,8 @@ import signal
 import sys
 from logging.config import dictConfig
 import uvicorn
+
+from infrastructure.config.environment_settings import load_environment
 from infrastructure.config.uvicorn_logging_settings import UVICORN_LOGGING
 from presentation.controllers.event_controllers.kafka_event_controller import KafkaEventController
 
@@ -42,7 +44,8 @@ async def run_worker() -> None:
 
 def main() -> None:
     dictConfig(UVICORN_LOGGING)
-    mode = "kafka"
+    load_environment()
+    mode = "api"
     if len(sys.argv) > 1:
         mode = sys.argv[1].lower()
 
